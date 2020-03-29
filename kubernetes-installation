@@ -1,0 +1,46 @@
+install Docker :
+ $ curl -fsSL https://get.docker.com -o get-docker.sh  --change the version 
+$ sudo sh get-docker.sh
+
+KUBERNETES-INSTALLATION:
+
+sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+sudo apt-get update
+apt-cache policy kubelet (to know available kubernetes versions)
+apt install -y kubelet=1.17.4-00 kubeadm=1.17.4-00 kubectl=1.17.4-00
+sudo apt-mark hold kubelet kubeadm kubectl
+
+systemctl daemon-reload
+systemctl restart kubelet
+
+
+
+kubeadm init --apiserver-advertise-address=192.168.1.50 --pod-network-cidr=10.244.0.0/16
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+### copy the below join command on worker nodes:##
+kubeadm join 10.128.0.10:6443 --token jyq73w.j0jple8wsts8xqja \
+    --discovery-token-ca-cert-hash sha256:8e3a2f68d4998667b7cb39d088549589e7c056ddc9761b904c929d41550101ce
+
+#### choosen network is flannel ......
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
+
+
+## below are to verify the nodes ###
+kubectl get nodes
+kubctl get pods -n kube-system
+
+
+
+
+	
+	
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config	
