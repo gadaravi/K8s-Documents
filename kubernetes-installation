@@ -1,3 +1,9 @@
+Update etc/hosts on all the hosts
+
+Disable swap on all the hosts
+swapoff -a  (temp)
+Update etc/fstab for permanent
+
 install Docker :
  $ curl -fsSL https://get.docker.com -o get-docker.sh  --change the version 
 $ sudo sh get-docker.sh
