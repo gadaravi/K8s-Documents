@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: temp
+spec:
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate       
+  replicas: 2
+  selector:
+    matchLabels:
+      app: temp
+  template:
+    metadata:
+      labels:
+        app: temp
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver-pods
+  labels:
+    app: temp1
+spec:
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  replicas: 2
+  selector:
+    matchLabels:
+      app: temp1
+  template:
+    metadata:
+      labels:
+        app: temp1
+    spec:
+      containers:
+      - name: httpd
+        image: httpd:2.4.43
+        ports:
+        - containerPort: 80        
